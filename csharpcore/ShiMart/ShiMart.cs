@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace ShiMartKata
 {
@@ -10,53 +11,45 @@ namespace ShiMartKata
             this.Items = Items;
         }
 
-        public void UpdateQuality()
+        private void UpdateSellIn(Item item)
         {
-            for (var i = 0; i < Items.Count; i++)
+            // "Canned Beans", being a non-perishable, never has to be sold or decreases in Quality.
+            if (item.Name != "Canned Beans")
             {
-                if (Items[i].Name != "Canned Beans")
-                {
-                    Items[i].SellIn = Items[i].SellIn - 1;
-                }
+                item.SellIn--;
+            }
+        }
+        
+        private void UpdateQuality(Item item)
+        {
+            // Do the instructions mention that the Aged Brie doubles in rate after past the sell in date?
+            int updateQuantity = item.SellIn < 0 ? 2 : 1;
+            
+            switch (item.Name)
+            {
+                case "Canned Beans":
+                    break;
+                case "Aged Brie":
+                    if (item.Quality < 50) item.Quality+= updateQuantity;
+                    if (item.Quality > 50) item.Quality = 50;
+                    break;
+                default:
+                    if (item.Name.Contains("Baked")) { updateQuantity *= 2; }
+                    if(item.Quality > 0) item.Quality-= updateQuantity;
+                    if (item.Quality < 0) item.Quality = 0;
+                    break;
+            }
+            
+        }
 
-                if (Items[i].Name == "Aged Brie")
-                {
-                    if (Items[i].Quality < 50)
-                    {
-                        Items[i].Quality = Items[i].Quality + 1;
-                    }
-                }
-                else
-                {
-                    if (Items[i].Quality > 0)
-                    {
-                        if (Items[i].Name != "Canned Beans")
-                        {
-                            Items[i].Quality = Items[i].Quality - 1;
-                        }
-                    }
-                }
+        public void UpdateInventory()
+        {
+            foreach (var item in Items)
+            {
+                UpdateSellIn(item);
 
-                if (Items[i].SellIn < 0)
-                {
-                    if (Items[i].Name == "Aged Brie")
-                    {
-                        if (Items[i].Quality < 50)
-                        {
-                            Items[i].Quality = Items[i].Quality + 1;
-                        }
-                    }
-                    else
-                    {
-                        if (Items[i].Quality > 0)
-                        {
-                            if (Items[i].Name != "Canned Beans")
-                            {
-                                Items[i].Quality = Items[i].Quality - 1;
-                            }
-                        }
-                    }
-                }
+                UpdateQuality(item);
+                
             }
         }
     }

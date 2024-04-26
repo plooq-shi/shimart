@@ -18,7 +18,8 @@ namespace ShiMartKata
                 new Item {Name = "Canned Beans", SellIn = -1, Quality = 80},
                 
                 // This Baked good does not work properly yet!
-				new Item {Name = "Baked Sourdough Bread", SellIn = 3, Quality = 6}
+				new Item {Name = "Baked Sourdough Bread", SellIn = 3, Quality = 6},
+				new Item {Name = "Baked Sourdough Bread", SellIn = 3, Quality = 20}
             };
 
             var app = new ShiMart(Items);
@@ -33,7 +34,7 @@ namespace ShiMartKata
                     System.Console.WriteLine(Items[j].Name + ", " + Items[j].SellIn + ", " + Items[j].Quality);
                 }
                 Console.WriteLine("");
-                app.UpdateQuality();
+                app.UpdateInventory();
             }
         }
     }
